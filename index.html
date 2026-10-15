@@ -9,22 +9,16 @@
   <meta name="description" content="Creative and responsive websites for businesses and individuals.">
 
   <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-  
 </head>
 
 <body>
 
-    
-
+  <!-- NAVBAR -->
   <header class="navbar">
     <a href="#home" class="logo-link" aria-label="RDstudio - Home">
-  <img
-    src="logo.png"
-    alt="RDstudio Logo"
-    class="site-logo"
-  >
-</a>
+      <img src="logo.png" alt="RDstudio Logo" class="site-logo">
+    </a>
+
     <nav>
       <a href="#home">Home</a>
       <a href="#about">About</a>
@@ -35,6 +29,8 @@
   </header>
 
   <main>
+
+    <!-- HERO -->
     <section class="hero" id="home">
       <div class="hero-content">
         <p class="eyebrow">✿ CREATIVE FREELANCE STUDIO</p>
@@ -44,7 +40,9 @@
         </h1>
 
         <p class="intro">
-         Hi, I'm Reshma — a frontend web developer creating clean, responsive and aesthetic websites for small businesses and personal brands.
+          Hi, I'm Reshma — a frontend web developer creating clean,
+          responsive and aesthetic websites for small businesses
+          and personal brands.
         </p>
 
         <div class="hero-buttons">
@@ -55,34 +53,31 @@
         <p class="handwritten">made with love & creativity ✿</p>
       </div>
 
-      <!-- <div class="hero-art">
-        <span class="decoration star">✳</span>
-        <div class="art-card">
-          <p>A LITTLE CREATIVE MAGIC</p>
-          <div class="flower">🌿</div>
-          <h2>Design your dreams.</h2>
-          <p>Simple. Thoughtful. Beautiful.</p>
-        </div>
-        <span class="decoration heart">♡</span>
-      </div> -->
       <div class="hero-art">
-  <img
-    src="workspace.png"
-    alt="A cozy creative workspace with a laptop, books and plants"
-    class="workspace-image"
-  >
-  <span class="workspace-note">Turning ideas into websites ♡</span>
-</div>
+        <img
+          src="workspace.png"
+          alt="A cozy creative workspace with a laptop, books and plants"
+          class="workspace-image"
+        >
+        <span class="workspace-note">Turning ideas into websites ♡</span>
+      </div>
     </section>
 
+    <!-- ABOUT -->
     <section class="section" id="about">
       <p class="eyebrow">A LITTLE ABOUT ME</p>
       <h2>Hey there, lovely! ♡</h2>
+
       <p class="section-text">
-       I'm a beginner frontend web developer passionate about creating beautiful and user-friendly websites. I enjoy turning ideas into responsive web experiences using HTML, CSS, and JavaScript. My goal is to help businesses and individuals build their online presence.
+        I'm a beginner frontend web developer passionate about creating
+        beautiful and user-friendly websites. I enjoy turning ideas into
+        responsive web experiences using HTML, CSS, and JavaScript.
+        My goal is to help businesses and individuals build their
+        online presence.
       </p>
     </section>
 
+    <!-- SERVICES -->
     <section class="section" id="services">
       <p class="eyebrow">WHAT I CAN DO FOR YOU</p>
       <h2>My little services ✿</h2>
@@ -108,310 +103,221 @@
       </div>
     </section>
 
-    <!-- <section class="section" id="work">
+    <!-- MY WORK -->
+    <section class="section work-section" id="work">
       <p class="eyebrow">A PEEK AT MY CREATIVITY</p>
       <h2>Things I've created ✨</h2>
 
-      <div class="grid">
-        <article class="card project">
-          <div class="project-art sage-art">💎</div>
-          <h3>Jewellery Website</h3>
-          <p>A website concept for a jewellery business.</p>
-          <span class="tag">HTML · CSS · JavaScript</span>
+      <p class="work-intro">
+        A little collection of websites I've designed and developed with care.
+      </p>
+
+      <div class="grid project-grid">
+
+        <article class="card project-card">
+          <a
+            class="project-image-link"
+            href="https://shree-yash-diamond-jewels.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="View Jewellery Website"
+          >
+            <img
+              src="jewellery.png.png"
+              alt="Shree Yash Diamond and Jewels website preview"
+              class="project-image"
+              loading="lazy"
+            >
+          </a>
+
+          <div class="project-info">
+            <span class="project-number">01 / CLIENT WEBSITE</span>
+            <h3>Jewellery Website</h3>
+            <p>A digital showcase for a diamond jewellery brand.</p>
+            <span class="tag">HTML · CSS · JavaScript</span>
+            <a
+              class="project-link"
+              href="https://shree-yash-diamond-jewels.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >View Live Website ↗</a>
+          </div>
         </article>
 
-        <article class="card project">
-          <div class="project-art oat-art">🌷</div>
-          <h3>Personal Portfolio</h3>
-          <p>A creative space to showcase work and skills.</p>
-          <span class="tag">Responsive Design</span>
+        <article class="card project-card">
+          <a
+            class="project-image-link"
+            href="https://amusement-park-rho.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="View Amusement Park Website"
+          >
+            <img
+              src="amusement.png.png"
+              alt="Amusement Park website preview"
+              class="project-image"
+              loading="lazy"
+            >
+          </a>
+
+          <div class="project-info">
+            <span class="project-number">02 / WEB PROJECT</span>
+            <h3>Amusement Park</h3>
+            <p>A website project showcasing an amusement park experience.</p>
+            <span class="tag">Web Development</span>
+            <a
+              class="project-link"
+              href="https://amusement-park-rho.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >View Live Website ↗</a>
+          </div>
         </article>
 
-        <article class="card project">
-          <div class="project-art sage-art">🛍️</div>
-          <h3>Small Business Website</h3>
-          <p>A simple online presence for a growing brand.</p>
-          <span class="tag">Web Development</span>
+        <article class="card project-card">
+          <a
+            class="project-image-link"
+            href="https://voyage-flow-silk.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="View Voyage Flow Website"
+          >
+            <img
+              src="voyageflow.png.png"
+              alt="Voyage Flow website preview"
+              class="project-image"
+              loading="lazy"
+            >
+          </a>
+
+          <div class="project-info">
+            <span class="project-number">03 / WEB PROJECT</span>
+            <h3>Voyage Flow</h3>
+            <p>A travel-themed website project.</p>
+            <span class="tag">Responsive Design</span>
+            <a
+              class="project-link"
+              href="https://voyage-flow-silk.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >View Live Website ↗</a>
+          </div>
         </article>
+
+        <article class="card project-card">
+          <a
+            class="project-image-link"
+            href="https://reshma-khatoon-portfolio.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="View Personal Portfolio"
+          >
+            <img
+              src="portfolio.png.png"
+              alt="Reshma's personal portfolio website preview"
+              class="project-image"
+              loading="lazy"
+            >
+          </a>
+
+          <div class="project-info">
+            <span class="project-number">04 / PERSONAL PROJECT</span>
+            <h3>My Personal Portfolio</h3>
+            <p>
+              My personal space to showcase my work and web development skills.
+            </p>
+            <span class="tag">HTML · CSS · JavaScript</span>
+            <a
+              class="project-link"
+              href="https://reshma-khatoon-portfolio.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >View Live Website ↗</a>
+          </div>
+        </article>
+
       </div>
-    </section> -->
+    </section>
 
-    
-<section class="section work-section" id="work">
-  <p class="eyebrow">A PEEK AT MY CREATIVITY</p>
-  <h2>Things I've created ✨</h2>
+    <!-- CONTACT -->
+    <section class="contact" id="contact">
+      <p class="eyebrow">A LITTLE HELLO GOES A LONG WAY ♡</p>
 
-  <p class="work-intro">
-    A little collection of websites I've designed and developed with care.
-  </p>
+      <h2>Let's make something beautiful ✿</h2>
 
-  <div class="grid project-grid">
+      <p class="contact-intro">
+        Have a little idea in mind? Tell me all about it!
+        I'd love to create something lovely with you. ♡
+      </p>
 
-    <!-- PROJECT 1 -->
-    <article class="card project-card">
-      <a
-        class="project-image-link"
-        href="https://shree-yash-diamond-jewels.vercel.app/"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="View Jewellery Website"
-      >
-        <img
-          src="jewellery.png.png"
-          alt="Shree Yash Diamond and Jewels website preview"
-          class="project-image"
-          loading="lazy"
+      <form id="contact-form" class="contact-form">
+
+        <label for="from_name">What should I call you? 🌷</label>
+        <input
+          type="text"
+          id="from_name"
+          name="from_name"
+          placeholder="Your lovely name..."
+          required
         >
-      </a>
 
-      <div class="project-info">
-        <span class="project-number">01 / CLIENT WEBSITE</span>
-        <h3>Jewellery Website</h3>
-        <p>
-          A digital showcase for a diamond jewellery brand.
-        </p>
-        <span class="tag">HTML · CSS · JavaScript</span>
-        <a
-          class="project-link"
-          href="https://shree-yash-diamond-jewels.vercel.app/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >View Live Website ↗</a>
-      </div>
-    </article>
-
-    <!-- PROJECT 2 -->
-    <article class="card project-card">
-      <a
-        class="project-image-link"
-        href="https://amusement-park-rho.vercel.app/"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="View Amusement Park Website"
-      >
-        <img
-          src="amusement.png.png"
-          alt="Amusement Park website preview"
-          class="project-image"
-          loading="lazy"
+        <label for="from_email">Where can I write back? 💌</label>
+        <input
+          type="email"
+          id="from_email"
+          name="from_email"
+          placeholder="Your email address..."
+          required
         >
-      </a>
 
-      <div class="project-info">
-        <span class="project-number">02 / WEB PROJECT</span>
-        <h3>Amusement Park</h3>
-        <p>
-          A website project showcasing an amusement park experience.
-        </p>
-        <span class="tag">Web Development</span>
-        <a
-          class="project-link"
-          href="https://amusement-park-rho.vercel.app/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >View Live Website ↗</a>
-      </div>
-    </article>
+        <label for="message">Tell me your little idea ✨</label>
+        <textarea
+          id="message"
+          name="message"
+          rows="5"
+          placeholder="Let's dream up something wonderful..."
+          required
+        ></textarea>
 
-    <!-- PROJECT 3 -->
-    <article class="card project-card">
-      <a
-        class="project-image-link"
-        href="https://voyage-flow-silk.vercel.app/"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="View Voyage Flow Website"
-      >
-        <img
-          src="voyageflow.png.png"
-          alt="Voyage Flow website preview"
-          class="project-image"
-          loading="lazy"
-        >
-      </a>
+        <div class="contact-details">
+          <p>
+            <strong>Email:</strong>
+            <a href="mailto:kreshma172007@gmail.com">
+              kreshma172007@gmail.com
+            </a>
+          </p>
 
-      <div class="project-info">
-        <span class="project-number">03 / WEB PROJECT</span>
-        <h3>Voyage Flow</h3>
-        <p>
-          A travel-themed website project.
-        </p>
-        <span class="tag">Responsive Design</span>
-        <a
-          class="project-link"
-          href="https://voyage-flow-silk.vercel.app/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >View Live Website ↗</a>
-      </div>
-    </article>
+          <p>
+            <strong>Phone:</strong>
+            <a href="tel:9911282161">9911282161</a>
+          </p>
+        </div>
 
-    <!-- PROJECT 4 -->
-    <article class="card project-card">
-      <a
-        class="project-image-link"
-        href="https://reshma-khatoon-portfolio.vercel.app/"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="View Personal Portfolio"
-      >
-        <img
-          src="portfolio.png.png"
-          alt="Reshma's personal portfolio website preview"
-          class="project-image"
-          loading="lazy"
-        >
-      </a>
+        <button type="submit" class="btn" id="submit-btn">
+          Send a little note ♡
+        </button>
 
-      <div class="project-info">
-        <span class="project-number">04 / PERSONAL PROJECT</span>
-        <h3>My Personal Portfolio</h3>
-        <p>
-          My personal space to showcase my work and web development skills.
-        </p>
-        <span class="tag">HTML · CSS · JavaScript</span>
-        <a
-          class="project-link"
-          href="https://reshma-khatoon-portfolio.vercel.app/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >View Live Website ↗</a>
-      </div>
-    </article>
+        <p id="form-status" role="status" aria-live="polite"></p>
 
-  </div>
-</section>
+      </form>
 
+      <p class="contact-footer">
+        Made with love, a little creativity & lots of coffee ☕
+      </p>
+    </section>
 
-    <!-- <section class="contact" id="contact">
-      <p class="eyebrow">HAVE A PROJECT IN MIND?</p>
-      <h2>Let's create something lovely!</h2>
-      <p>Tell me about your idea. I'd love to hear from you.</p>
+  </main>
 
-      <a class="btn" href="mailto:YOUR_EMAIL@example.com?subject=Website%20Enquiry">
-        Email me ♡
-      </a>
-    </section> -->
-
-<!-- <section class="contact" id="contact"> -->
-  <!-- <p class="eyebrow">HAVE A PROJECT IN MIND?</p>
-  <h2>Let's create something lovely!</h2>
-  <p>Tell me about your idea. I'd love to hear from you.</p>
-
-  <form id="contact-form" class="contact-form">
-    <label for="from_name">Your Name</label>
-    <input
-      type="text"
-      id="from_name"
-      name="from_name"
-      placeholder="Enter your name"
-      required
-    >
-
-    <label for="from_email">Your Email</label>
-    <input
-      type="email"
-      id="from_email"
-      name="from_email"
-      placeholder="Enter your email"
-      required
-    >
-
-    <label for="message">Your Message</label>
-    <textarea
-      id="message"
-      name="message"
-      placeholder="Tell me about your project..."
-      rows="5"
-      required
-    ></textarea>
-
-    <button type="submit" class="btn" id="submit-btn">
-      Send Message ♡
-    </button>
-
-    <p id="form-status" role="status"></p>
-  </form> -->
-<!-- </section> -->
-<section class="contact" id="contact">
-  <p class="eyebrow">A LITTLE HELLO GOES A LONG WAY ♡</p>
-
-  <h2>Let's make something beautiful ✿</h2>
-
-  <p class="contact-intro">
-    Have a little idea in mind? Tell me all about it!
-    I'd love to create something lovely with you. ♡
-  </p>
-
-  <form id="contact-form" class="contact-form">
-
-    <label for="from_name">What should I call you? 🌷</label>
-    <input
-      type="text"
-      id="from_name"
-      name="from_name"
-      placeholder="Your lovely name..."
-      required
-    >
-
-    <label for="from_email">Where can I write back? 💌</label>
-    <input
-      type="email"
-      id="from_email"
-      name="from_email"
-      placeholder="Your email address..."
-      required
-    >
-
-    <label for="message">Tell me your little idea ✨</label>
-    <textarea
-      id="message"
-      name="message"
-      rows="5"
-      placeholder="Let's dream up something wonderful..."
-      required
-    ></textarea>
-
-    <div class="contact-details">
-  <p>
-    <strong>Email:</strong>
-    <a href="mailto:kreshma172007@gmail.com">
-      kreshma172007@gmail.com
-    </a>
-  </p>
-
-  <p>
-    <strong>Phone:</strong>
-    <a href="tel:9911282161">
-      9911282161
-    </a>
-  </p>
-</div>
-    <button type="submit" class="btn" id="submit-btn">
-      Send a little note ♡
-    </button>
-
-    <p id="form-status" role="status"></p>
-
-  </form>
-
-  <p class="contact-footer">
-    Made with love, a little creativity & lots of coffee ☕
-  </p>
-</section>
-
-
-</main>
-
+  <!-- FOOTER -->
   <footer>
     <p>Made with ♡ and a little creativity.</p>
     <p>© <span id="year"></span> Your Creative Studio</p>
   </footer>
 
- <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script src="./script.js"></script>
+  <!-- Load libraries before script.js; do not duplicate these tags -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./script.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./script.js"></script>
 </body>
 </html>
