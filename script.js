@@ -1,3 +1,15 @@
+
+const SUPABASE_URL = "https://kmvmnojjbbgyuskymqju.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+  "sb_publishable_6DbvBmw-CwV1rt04HsLmtg_JHnWUoCd";
+
+// Connect to Supabase
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
+
 // Automatically update footer year
 const yearElement = document.getElementById("year");
 
@@ -11,7 +23,7 @@ const submitButton = document.getElementById("submit-btn");
 const formStatus = document.getElementById("form-status");
 
 if (contactForm) {
-  contactForm.addEventListener("submit", function (event) {
+  contactForm.addEventListener("submit", async function (event) {
     event.preventDefault();
 
     const name = document.getElementById("from_name").value.trim();
@@ -25,7 +37,7 @@ if (contactForm) {
 
     if (!window.emailjs) {
       formStatus.textContent =
-        "Email service is not connected yet. Please try again later.";
+        "Email service is unavailable. Please try again later.";
       return;
     }
 
@@ -33,38 +45,71 @@ if (contactForm) {
     submitButton.textContent = "Sending... 💌";
     formStatus.textContent = "";
 
-    emailjs
-      .send(
-        "service_xhm40ql",
-        "template_zz78gjf",
-        {
-          from_name: name,
-          from_email: email,
-          message: message
-        },
-        {
-          publicKey: "VI3oZ8d8572fidLrN"
+    let databaseSaved = false;
+    let emailSent = false;
+
+    try {
+      // 1. Save the inquiry in Supabase
+      try {
+        const { error } = await supabaseClient
+          .from("inquiries")
+          .insert([
+            {
+              name: name,
+              email: email,
+              message: message
+            }
+          ]);
+
+        if (error) {
+          throw error;
         }
-      )
-      .then(function (response) {
-  console.log("EmailJS status:", response.status);
-  console.log("EmailJS response:", response.text);
 
-  formStatus.textContent =
-    "EmailJS response: " + response.status + " " + response.text;
+        databaseSaved = true;
+        console.log("Inquiry saved in Supabase.");
+      } catch (error) {
+        console.error("Supabase Error:", error);
+      }
 
-  contactForm.reset();
-})
-      .catch(function (error) {
-  console.error("EmailJS Error:", error);
+      // 2. Send the email using existing EmailJS setup
+      try {
+        await emailjs.send(
+          "service_xhm40ql",
+          "template_zz78gjf",
+          {
+            from_name: name,
+            from_email: email,
+            message: message
+          },
+          {
+            publicKey: "VI3oZ8d8572fidLrN"
+          }
+        );
 
-  formStatus.textContent =
-    "Email failed: " +
-    (error?.text || error?.message || "Please try again.");
-})
-      .finally(function () {
-        submitButton.disabled = false;
-        submitButton.textContent = "Send a little note ♡";
-      });
+        emailSent = true;
+        console.log("Email sent successfully.");
+      } catch (error) {
+        console.error("EmailJS Error:", error);
+      }
+
+      // 3. Show the actual result
+      if (databaseSaved && emailSent) {
+        formStatus.textContent =
+          "Thank you! Your message has been sent successfully. 💌";
+        contactForm.reset();
+      } else if (databaseSaved && !emailSent) {
+        formStatus.textContent =
+          "Your message was saved, but the email could not be sent. Please contact us again later.";
+      } else if (!databaseSaved && emailSent) {
+        formStatus.textContent =
+          "Your email was sent, but database saving failed. Please do not submit again; contact the website owner.";
+      } else {
+        formStatus.textContent =
+          "Sorry, your message could not be processed. Please try again later.";
+      }
+    } finally {
+      submitButton.disabled = false;
+      submitButton.textContent = "Send a little note ♡";
+    }
   });
 }
