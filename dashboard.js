@@ -39,6 +39,7 @@ function formatDate(dateValue) {
   });
 }
 
+
 function createMessageCard(inquiry) {
   const card = document.createElement("article");
   card.className = "message-card";
@@ -58,7 +59,79 @@ function createMessageCard(inquiry) {
   date.className = "message-date";
   date.textContent = "Received: " + formatDate(inquiry.created_at);
 
-  card.append(name, email, message, date);
+  // Status controls
+  const statusLabel = document.createElement("label");
+  statusLabel.textContent = "Inquiry status: ";
+  statusLabel.style.display = "block";
+  statusLabel.style.marginTop = "16px";
+  statusLabel.style.marginBottom = "8px";
+  statusLabel.style.fontWeight = "600";
+
+  const statusSelect = document.createElement("select");
+  statusSelect.style.padding = "10px";
+  statusSelect.style.borderRadius = "8px";
+  statusSelect.style.border = "1px solid #d8cfc2";
+  statusSelect.style.background = "#FFFCF7";
+  statusSelect.style.color = "#493A33";
+
+  ["New", "Read", "Replied"].forEach(function (status) {
+    const option = document.createElement("option");
+    option.value = status;
+    option.textContent = status;
+    statusSelect.appendChild(option);
+  });
+
+  statusSelect.value = inquiry.status || "New";
+
+  const saveButton = document.createElement("button");
+  saveButton.type = "button";
+  saveButton.textContent = "Save Status";
+  saveButton.style.marginTop = "10px";
+
+  const statusMessage = document.createElement("p");
+  statusMessage.style.marginTop = "8px";
+  statusMessage.style.fontSize = "13px";
+  statusMessage.setAttribute("role", "status");
+
+  saveButton.addEventListener("click", async function () {
+    saveButton.disabled = true;
+    statusMessage.textContent = "Saving status...";
+
+    try {
+      const { data, error } = await supabaseClient
+        .from("inquiries")
+        .update({ status: statusSelect.value })
+        .eq("id", inquiry.id)
+        .select("id");
+
+      if (error) throw error;
+
+      if (!data || data.length === 0) {
+        throw new Error("No inquiry was updated. Check the table ID and permissions.");
+      }
+
+      inquiry.status = statusSelect.value;
+      statusMessage.textContent = "Status saved successfully! ♡";
+    } catch (error) {
+      console.error("Status update error:", error);
+      statusMessage.textContent =
+        "Could not save status. Please check the inquiry ID and Supabase permissions.";
+    } finally {
+      saveButton.disabled = false;
+    }
+  });
+
+  statusLabel.appendChild(statusSelect);
+
+  card.append(
+    name,
+    email,
+    message,
+    date,
+    statusLabel,
+    saveButton,
+    statusMessage
+  );
 
   return card;
 }
@@ -71,8 +144,8 @@ async function loadMessages() {
   try {
     const { data, error } = await supabaseClient
       .from("inquiries")
-      .select("name, email, message, created_at")
-      .order("created_at", { ascending: false });
+.select("id, name, email, message, created_at, status")   
+   .order("created_at", { ascending: false });
 
     if (error) throw error;
 
