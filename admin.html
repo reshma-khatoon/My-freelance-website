@@ -1,0 +1,183 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>RD Studio | Admin Login</title>
+
+  <style>
+    :root {
+      --oat: #F5F0E6;
+      --sage: #A9B99A;
+      --deep-sage: #66765B;
+      --coffee: #493A33;
+      --white: #FFFCF7;
+      --muted: #75685F;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: var(--oat);
+      color: var(--coffee);
+      font-family: Arial, sans-serif;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+      padding: 38px 30px;
+      background: var(--white);
+      border: 1px solid #e6ddcf;
+      border-radius: 20px;
+      box-shadow: 0 12px 35px rgba(73, 58, 51, 0.08);
+    }
+
+    .brand {
+      margin-bottom: 28px;
+      text-align: center;
+    }
+
+    .brand h1 {
+      margin-bottom: 8px;
+      font-size: 30px;
+      color: var(--deep-sage);
+    }
+
+    .brand p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    h2 {
+      margin-bottom: 8px;
+      font-size: 22px;
+    }
+
+    .subtitle {
+      margin-bottom: 25px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px;
+      margin-bottom: 18px;
+      border: 1px solid #d8cfc2;
+      border-radius: 10px;
+      background: #fff;
+      color: var(--coffee);
+      font-size: 15px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--deep-sage);
+      box-shadow: 0 0 0 3px rgba(102, 118, 91, 0.12);
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background: var(--deep-sage);
+      color: white;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: var(--coffee);
+    }
+
+    button:disabled {
+      opacity: 0.65;
+      cursor: wait;
+    }
+
+    #login-status {
+      min-height: 22px;
+      margin-top: 16px;
+      color: var(--deep-sage);
+      font-size: 13px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    .back-link {
+      display: block;
+      margin-top: 20px;
+      text-align: center;
+      color: var(--deep-sage);
+      font-size: 13px;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="login-card">
+    <div class="brand">
+      <h1>RD Studio ♡</h1>
+      <p>Your little creative workspace</p>
+    </div>
+
+    <h2>Welcome back!</h2>
+    <p class="subtitle">
+      Sign in to manage your website inquiries.
+    </p>
+
+    <form id="admin-login-form">
+      <label for="admin-email">Email address</label>
+      <input
+        type="email"
+        id="admin-email"
+        placeholder="Your admin email"
+        autocomplete="username"
+        required
+      >
+
+      <label for="admin-password">Password</label>
+      <input
+        type="password"
+        id="admin-password"
+        placeholder="Your password"
+        autocomplete="current-password"
+        required
+      >
+
+      <button type="submit" id="login-btn">
+        Sign In ♡
+      </button>
+
+      <p id="login-status" role="status" aria-live="polite"></p>
+    </form>
+
+    <a href="index.html" class="back-link">
+      ← Back to RD Studio website
+    </a>
+  </main>
+</body>
+</html>
