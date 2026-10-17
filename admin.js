@@ -25,23 +25,29 @@ loginForm.addEventListener("submit", async function (event) {
 
   try {
     const { data, error } = await supabaseClient.auth.signInWithPassword({
-      email: email,
-      password: password
+      email,
+      password
     });
 
-    if (error) {
-      throw error;
+    if (error) throw error;
+
+    if (
+      !data.user ||
+      data.user.id !== "ed313df0-8ac0-4426-88ca-235ee0b735a6"
+    ) {
+      await supabaseClient.auth.signOut();
+      throw new Error("This account is not authorized as the admin.");
     }
 
-    loginStatus.textContent =
-      "Login successful! Your admin account is connected. ♡";
+    loginStatus.textContent = "Login successful! Opening dashboard... ♡";
 
-    console.log("Admin login successful.");
+    window.location.href = "dashboard.html";
   } catch (error) {
     console.error("Admin login error:", error);
-
     loginStatus.textContent =
-      "Login failed. Please check your email and password.";
+      error.message === "This account is not authorized as the admin."
+        ? "This account is not authorized."
+        : "Login failed. Please check your email and password.";
   } finally {
     loginButton.disabled = false;
     loginButton.textContent = "Sign In ♡";
