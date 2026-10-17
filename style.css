@@ -880,3 +880,24 @@ textarea:focus-visible {
     animation-iteration-count: 1 !important;
   }
 }
+
+.delete-btn {
+  margin-top: 12px;
+  padding: 10px 16px;
+  border: 1px solid #c77b70;
+  border-radius: 9px;
+  background: #fff4f1;
+  color: #8b4038;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  background: #f8e2dc;
+}
+
+.delete-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

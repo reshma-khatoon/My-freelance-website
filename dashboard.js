@@ -181,6 +181,45 @@ function createMessageCard(inquiry) {
   );
 
   return card;
+// Delete Message Button
+const deleteButton = document.createElement("button");
+
+deleteButton.type = "button";
+deleteButton.textContent = "Delete Message 🗑️";
+deleteButton.className = "delete-btn";
+
+deleteButton.addEventListener("click", async function () {
+  const confirmed = confirm(
+    "Are you sure you want to delete this message?"
+  );
+
+  if (!confirmed) return;
+
+  deleteButton.disabled = true;
+  deleteButton.textContent = "Deleting...";
+
+  const { error } = await supabaseClient
+    .from("inquiries")
+    .delete()
+    .eq("id", inquiry.id);
+
+  if (error) {
+    alert("Message delete nahi hua. Please try again.");
+    console.error(error);
+
+    deleteButton.disabled = false;
+    deleteButton.textContent = "Delete Message 🗑️";
+    return;
+  }
+
+  allInquiries = allInquiries.filter(function (item) {
+    return item.id !== inquiry.id;
+  });
+
+  filterMessages();
+});
+
+card.appendChild(deleteButton);
 }
 
 async function loadMessages() {
