@@ -224,6 +224,39 @@
         padding: 15px;
       }
     }
+
+    
+.message-filters {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.message-filters input,
+.message-filters select {
+  width: 100%;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #d8cfc2;
+  border-radius: 9px;
+  background: #FFFCF7;
+  color: #493A33;
+  font-size: 14px;
+}
+
+#filter-count {
+  margin-bottom: 16px;
+  color: #75685F;
+  font-size: 13px;
+}
+
+@media (max-width: 600px) {
+  .message-filters {
+    grid-template-columns: 1fr;
+  }
+}
+
   </style>
 </head>
 
@@ -261,9 +294,28 @@
     </section>
 
     <section class="messages-section">
-      <div class="section-heading">
-        <h2>Customer Messages 💌</h2>
-      </div>
+      
+<div class="section-heading">
+  <h2>Customer Messages 💌</h2>
+</div>
+
+<div class="message-filters">
+  <input
+    type="search"
+    id="search-messages"
+    placeholder="Search by name or email..."
+    aria-label="Search customer messages"
+  >
+
+  <select id="filter-status" aria-label="Filter messages by status">
+    <option value="All">All Messages</option>
+    <option value="New">New</option>
+    <option value="Read">Read</option>
+    <option value="Replied">Replied</option>
+  </select>
+</div>
+
+<p id="filter-count" aria-live="polite"></p>
 
       <p id="dashboard-status" role="status" aria-live="polite">
         Loading messages...

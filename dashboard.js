@@ -17,6 +17,11 @@ const totalCount = document.getElementById("total-count");
 const latestCount = document.getElementById("latest-count");
 const refreshButton = document.getElementById("refresh-btn");
 const logoutButton = document.getElementById("logout-btn");
+const searchInput = document.getElementById("search-messages");
+const statusFilter = document.getElementById("filter-status");
+const filterCount = document.getElementById("filter-count");
+
+let allInquiries = [];
 
 document.getElementById("year").textContent = new Date().getFullYear();
 
@@ -37,6 +42,46 @@ function formatDate(dateValue) {
     dateStyle: "medium",
     timeStyle: "short"
   });
+}
+
+function filterMessages() {
+  const searchTerm = searchInput.value.trim().toLowerCase();
+  const selectedStatus = statusFilter.value;
+
+  const filteredInquiries = allInquiries.filter(function (inquiry) {
+    const name = (inquiry.name || "").toLowerCase();
+    const email = (inquiry.email || "").toLowerCase();
+    const status = inquiry.status || "New";
+
+    const matchesSearch =
+      name.includes(searchTerm) || email.includes(searchTerm);
+
+    const matchesStatus =
+      selectedStatus === "All" || status === selectedStatus;
+
+    return matchesSearch && matchesStatus;
+  });
+
+  messageList.replaceChildren();
+
+  filteredInquiries.forEach(function (inquiry) {
+    messageList.appendChild(createMessageCard(inquiry));
+  });
+
+  filterCount.textContent =
+    "Showing " + filteredInquiries.length +
+    " of " + allInquiries.length + " messages.";
+
+  if (filteredInquiries.length === 0) {
+    const emptyMessage = document.createElement("p");
+    emptyMessage.className = "empty-state";
+    emptyMessage.textContent =
+      allInquiries.length === 0
+        ? "No customer messages yet. ♡"
+        : "No messages match your search or selected status.";
+
+    messageList.appendChild(emptyMessage);
+  }
 }
 
 
@@ -150,19 +195,12 @@ async function loadMessages() {
     if (error) throw error;
 
     totalCount.textContent = data.length;
+    allInquiries = data;
     latestCount.textContent = Math.min(data.length, 5);
 
-    if (data.length === 0) {
-      showStatus("No customer messages yet. New inquiries will appear here.");
-      return;
-    }
-
-    data.forEach(function (inquiry) {
-      messageList.appendChild(createMessageCard(inquiry));
-    });
-
-    showStatus("Showing " + data.length + " customer message(s).");
-  } catch (error) {
+   showStatus("Customer messages loaded successfully.");
+filterMessages();}
+    catch (error) {
     console.error("Could not load inquiries:", error);
     showStatus(
       "Messages could not be loaded. Check your connection and Supabase permissions, then refresh."
@@ -205,5 +243,8 @@ logoutButton.addEventListener("click", async function () {
 
   window.location.replace("admin.html");
 });
+
+searchInput.addEventListener("input", filterMessages);
+statusFilter.addEventListener("change", filterMessages);
 
 checkAdminSession();
