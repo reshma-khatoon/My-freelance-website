@@ -30,6 +30,23 @@ if (contactForm) {
     const email = document.getElementById("from_email").value.trim();
     const message = document.getElementById("message").value.trim();
 
+    if (name.length < 2 || name.length > 80) {
+  formStatus.textContent =
+    "Please enter a name between 2 and 80 characters.";
+  return;
+}
+
+if (email.length > 254) {
+  formStatus.textContent = "Please enter a shorter email address.";
+  return;
+}
+
+if (message.length < 10 || message.length > 3000) {
+  formStatus.textContent =
+    "Your message should be between 10 and 3000 characters.";
+  return;
+}
+
     if (!name || !email || !message) {
       formStatus.textContent = "Please fill in all fields. 🌷";
       return;
