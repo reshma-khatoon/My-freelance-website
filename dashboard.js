@@ -86,7 +86,6 @@ const matchesSearch =
   }
 }
 
-
 function createMessageCard(inquiry) {
   const card = document.createElement("article");
   card.className = "message-card";
@@ -154,21 +153,63 @@ function createMessageCard(inquiry) {
       if (error) throw error;
 
       if (!data || data.length === 0) {
-        throw new Error("No inquiry was updated. Check the table ID and permissions.");
+        throw new Error("No inquiry was updated.");
       }
 
       inquiry.status = statusSelect.value;
       statusMessage.textContent = "Status saved successfully! ♡";
     } catch (error) {
       console.error("Status update error:", error);
-      statusMessage.textContent =
-        "Could not save status. Please check the inquiry ID and Supabase permissions.";
+      statusMessage.textContent = "Could not save status. Please try again.";
     } finally {
       saveButton.disabled = false;
     }
   });
 
   statusLabel.appendChild(statusSelect);
+
+  // Delete button
+  const deleteButton = document.createElement("button");
+  deleteButton.type = "button";
+  deleteButton.textContent = "Delete Message 🗑️";
+  deleteButton.className = "delete-btn";
+  deleteButton.style.display = "block";
+
+  deleteButton.addEventListener("click", async function () {
+    const confirmed = confirm(
+      "Are you sure you want to permanently delete this message?"
+    );
+
+    if (!confirmed) return;
+
+    deleteButton.disabled = true;
+    deleteButton.textContent = "Deleting...";
+
+    try {
+      const { data, error } = await supabaseClient
+        .from("inquiries")
+        .delete()
+        .eq("id", inquiry.id)
+        .select("id");
+
+      if (error) throw error;
+
+      if (!data || data.length === 0) {
+        throw new Error("No message was deleted. Check permissions.");
+      }
+
+      allInquiries = allInquiries.filter(function (item) {
+        return item.id !== inquiry.id;
+      });
+
+      filterMessages();
+    } catch (error) {
+      console.error("Delete error:", error);
+      alert("Message delete nahi hua. Please try again.");
+      deleteButton.disabled = false;
+      deleteButton.textContent = "Delete Message 🗑️";
+    }
+  });
 
   card.append(
     name,
@@ -177,49 +218,11 @@ function createMessageCard(inquiry) {
     date,
     statusLabel,
     saveButton,
-    statusMessage
+    statusMessage,
+    deleteButton
   );
 
   return card;
-// Delete Message Button
-const deleteButton = document.createElement("button");
-
-deleteButton.type = "button";
-deleteButton.textContent = "Delete Message 🗑️";
-deleteButton.className = "delete-btn";
-
-deleteButton.addEventListener("click", async function () {
-  const confirmed = confirm(
-    "Are you sure you want to delete this message?"
-  );
-
-  if (!confirmed) return;
-
-  deleteButton.disabled = true;
-  deleteButton.textContent = "Deleting...";
-
-  const { error } = await supabaseClient
-    .from("inquiries")
-    .delete()
-    .eq("id", inquiry.id);
-
-  if (error) {
-    alert("Message delete nahi hua. Please try again.");
-    console.error(error);
-
-    deleteButton.disabled = false;
-    deleteButton.textContent = "Delete Message 🗑️";
-    return;
-  }
-
-  allInquiries = allInquiries.filter(function (item) {
-    return item.id !== inquiry.id;
-  });
-
-  filterMessages();
-});
-
-card.appendChild(deleteButton);
 }
 
 async function loadMessages() {
