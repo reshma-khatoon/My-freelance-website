@@ -49,13 +49,15 @@ function filterMessages() {
   const selectedStatus = statusFilter.value;
 
   const filteredInquiries = allInquiries.filter(function (inquiry) {
-    const name = (inquiry.name || "").toLowerCase();
-    const email = (inquiry.email || "").toLowerCase();
-    const status = inquiry.status || "New";
+   const name = (inquiry.name || "").toLowerCase();
+const email = (inquiry.email || "").toLowerCase();
+const message = (inquiry.message || "").toLowerCase();
+const status = inquiry.status || "New";
 
-    const matchesSearch =
-      name.includes(searchTerm) || email.includes(searchTerm);
-
+const matchesSearch =
+  name.includes(searchTerm) ||
+  email.includes(searchTerm) ||
+  message.includes(searchTerm);
     const matchesStatus =
       selectedStatus === "All" || status === selectedStatus;
 
