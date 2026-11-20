@@ -62,6 +62,7 @@ function element() {
 test("contact form saves an optional normalized phone and rejects invalid input", async () => {
   const elements = {};
   const records = [];
+  let insertError = null;
   const contactForm = element();
   contactForm.reset = function () {};
   elements["contact-form"] = contactForm;
@@ -79,7 +80,7 @@ test("contact form saves an optional normalized phone and rejects invalid input"
         createClient() {
           return {
             from() {
-              return { async insert(rows) { records.push(rows[0]); return { error: null }; } };
+              return { async insert(rows) { records.push(rows[0]); return { error: insertError }; } };
             }
           };
         }
@@ -87,7 +88,7 @@ test("contact form saves an optional normalized phone and rejects invalid input"
     },
     document: { getElementById(id) { return elements[id]; } },
     emailjs: { async send() {} },
-    console, Date
+    console: { log() {}, error() {} }, Date
   });
   run("script.js", context);
   const submit = { preventDefault() {} };
@@ -100,7 +101,77 @@ test("contact form saves an optional normalized phone and rejects invalid input"
   assert.equal(records[0].phone, "+919876543210");
   elements.phone.value = "";
   await contactForm.listeners.submit(submit);
-  assert.equal(records[1].phone, null);
+  assert.equal(Object.hasOwn(records[1], "phone"), false);
+  insertError = { code: "PGRST204", message: "Missing phone column" };
+  elements.phone.value = "9876543210";
+  await contactForm.listeners.submit(submit);
+  assert.match(elements["form-status"].textContent, /phone number was not included/);
+});
+
+test("dashboard retries only a missing phone column and displays existing inquiries", async () => {
+  const elements = {};
+  const selections = [];
+  let firstError = { code: "42703", message: "column inquiries.phone does not exist" };
+  const inquiry = {
+    id: 1, name: "Priya", email: "priya@example.com", message: "A website for my shop",
+    created_at: "2026-01-01T00:00:00Z", status: "Read"
+  };
+  const client = {
+    auth: { getUser() { return new Promise(() => {}); } },
+    from(table) {
+      if (table === "inquiries") {
+        return {
+          select(columns) {
+            selections.push(columns);
+            return { async order() {
+              return columns.includes("phone")
+                ? (firstError
+                  ? { data: null, error: firstError }
+                  : { data: [{ ...inquiry, phone: "+919876543210" }], error: null })
+                : { data: [inquiry], error: null };
+            } };
+          }
+        };
+      }
+      assert.equal(table, "inquiry_contact_history");
+      return { select() { return { order() { return { order() {
+        return { async range() { return { data: null, error: { code: "PGRST205" } }; } };
+      } }; } }; } };
+    }
+  };
+  const context = vm.createContext({
+    window: { RDContact: utilities(), supabase: { createClient() { return client; } } },
+    document: {
+      getElementById(id) { return elements[id] || (elements[id] = element()); },
+      createElement() { return element(); }
+    },
+    console: { warn() {}, error() {} }, Date
+  });
+  elements["filter-status"] = element();
+  elements["filter-status"].value = "All";
+  run("dashboard.js", context);
+  await context.loadMessages();
+  assert.equal(selections.length, 2);
+  assert.match(elements["dashboard-status"].textContent, /migration/);
+  const card = elements["message-list"].children[0];
+  assert.equal(card.children[0].textContent, "Priya");
+  assert.equal(card.children[1].textContent, "priya@example.com");
+  assert.match(card.children[2].textContent, /migration/);
+  assert.equal(card.children[3].textContent, inquiry.message);
+  assert.match(card.children[4].textContent, /Received:/);
+  assert.equal(card.children[7].children[0].value, "Read");
+
+  selections.length = 0;
+  firstError = null;
+  await context.loadMessages();
+  assert.equal(selections.length, 1);
+  assert.equal(elements["message-list"].children[0].children[2].textContent, "+919876543210");
+
+  selections.length = 0;
+  firstError = { code: "42501", message: "permission denied for table inquiries" };
+  await context.loadMessages();
+  assert.equal(selections.length, 1);
+  assert.match(elements["dashboard-status"].textContent, /could not be loaded/);
 });
 
 test("dashboard links do not log contact; only confirmed completed actions do", async () => {

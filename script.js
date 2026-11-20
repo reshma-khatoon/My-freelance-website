@@ -83,16 +83,11 @@ if (message.length < 10 || message.length > 3000) {
     try {
       // 1. Save the inquiry in Supabase
       try {
+        const inquiry = { name: name, email: email, message: message };
+        if (phone) inquiry.phone = phone;
         const { error } = await supabaseClient
           .from("inquiries")
-          .insert([
-            {
-              name: name,
-              email: email,
-              phone: phone,
-              message: message
-            }
-          ]);
+          .insert([inquiry]);
 
         if (error) {
           throw error;
@@ -136,7 +131,9 @@ if (message.length < 10 || message.length > 3000) {
           "Your message was saved, but the email could not be sent. Please contact us again later.";
       } else if (!databaseSaved && emailSent) {
         formStatus.textContent =
-          "Your email was sent, but database saving failed. Please do not submit again; contact the website owner.";
+          phone
+            ? "Your message was emailed, but database saving failed and your phone number was not included. Please do not submit again; contact the website owner."
+            : "Your email was sent, but database saving failed. Please do not submit again; contact the website owner.";
       } else {
         formStatus.textContent =
           "Sorry, your message could not be processed. Please try again later.";

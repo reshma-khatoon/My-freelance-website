@@ -26,7 +26,10 @@ Before deploying the contact form and dashboard changes, run
 It adds an optional phone column and an admin-only contact history table, without
 changing the existing inquiry policies. Ensure the existing public inquiry insert
 permissions also allow the new `phone` column, and keep inquiry reads restricted
-to the admin. Existing inquiries without a phone number can still be emailed.
+to the admin. Until this migration is applied, the dashboard reports the
+missing phone column and displays existing inquiries without phone numbers.
+Inquiries submitted without a phone can still be saved; inquiries with a phone
+cannot be saved to the database until the migration is applied.
 
 The form accepts Indian mobile numbers with or without the +91 prefix. Call,
 WhatsApp, and email links open the relevant app for review; they do not make a

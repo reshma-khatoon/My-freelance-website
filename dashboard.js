@@ -109,7 +109,9 @@ function createMessageCard(inquiry) {
 
   const phone = document.createElement("p");
   phone.className = "message-email";
-  phone.textContent = inquiry.phone || "No phone number provided";
+  phone.textContent = Object.prototype.hasOwnProperty.call(inquiry, "phone")
+    ? inquiry.phone || "No phone number provided"
+    : "Phone numbers unavailable until the database migration is applied.";
 
   const actions = document.createElement("div");
   actions.className = "contact-actions";
@@ -337,10 +339,21 @@ async function loadMessages() {
   showStatus("Loading customer messages...");
 
   try {
-    const { data, error } = await supabaseClient
+    let { data, error } = await supabaseClient
       .from("inquiries")
-.select("id, name, email, phone, message, created_at, status")
-   .order("created_at", { ascending: false });
+      .select("id, name, email, phone, message, created_at, status")
+      .order("created_at", { ascending: false });
+
+    let phoneUnavailable = false;
+    if (error && error.code === "42703" &&
+        error.message === "column inquiries.phone does not exist") {
+      console.warn("Phone column is missing; loading inquiries without phone numbers.", error);
+      phoneUnavailable = true;
+      ({ data, error } = await supabaseClient
+        .from("inquiries")
+        .select("id, name, email, message, created_at, status")
+        .order("created_at", { ascending: false }));
+    }
 
     if (error) throw error;
 
@@ -367,10 +380,14 @@ async function loadMessages() {
         page++;
       } while (entries.length === pageSize);
       contactHistoryAvailable = true;
-      showStatus("Customer messages loaded successfully.");
+      showStatus(phoneUnavailable
+        ? "Messages loaded. Phone numbers are unavailable until the database migration is applied."
+        : "Customer messages loaded successfully.");
     } catch (historyError) {
       console.error("Could not load contact history:", historyError);
-      showStatus("Messages loaded, but contact history could not be loaded. Refresh to try again.");
+      showStatus(phoneUnavailable
+        ? "Messages loaded, but phone numbers and contact history are unavailable. Apply the database migration and refresh."
+        : "Messages loaded, but contact history could not be loaded. Refresh to try again.");
     }
 filterMessages();}
     catch (error) {
