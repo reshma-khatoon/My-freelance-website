@@ -7,7 +7,15 @@ const SUPABASE_PUBLISHABLE_KEY =
 // Connect to Supabase
 const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
-  SUPABASE_PUBLISHABLE_KEY
+  SUPABASE_PUBLISHABLE_KEY,
+  {
+    // Public form must always use the anon role, even if admin is logged in
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+      detectSessionInUrl: false
+    }
+  }
 );
 
 // Automatically update footer year
@@ -86,6 +94,7 @@ if (message.length < 10 || message.length > 3000) {
         console.log("Inquiry saved in Supabase.");
       } catch (error) {
         console.error("Supabase Error:", error);
+        console.log("Supabase error details:", JSON.stringify(error, null, 2));
       }
 
       // 2. Send the email using existing EmailJS setup

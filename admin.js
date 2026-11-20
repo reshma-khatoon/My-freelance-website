@@ -12,6 +12,41 @@ const supabaseClient = window.supabase.createClient(
 const loginForm = document.getElementById("admin-login-form");
 const loginButton = document.getElementById("login-btn");
 const loginStatus = document.getElementById("login-status");
+const recoveryForm = document.getElementById("recovery-form");
+const recoveryButton = document.getElementById("recovery-btn");
+const recoveryStatus = document.getElementById("recovery-status");
+
+document.getElementById("forgot-password-link").addEventListener("click", function (event) {
+  event.preventDefault();
+  recoveryForm.hidden = !recoveryForm.hidden;
+  if (!recoveryForm.hidden) {
+    document.getElementById("recovery-email").value =
+      document.getElementById("admin-email").value.trim();
+    document.getElementById("recovery-email").focus();
+  }
+});
+
+recoveryForm.addEventListener("submit", async function (event) {
+  event.preventDefault();
+  recoveryButton.disabled = true;
+  recoveryStatus.textContent = "";
+
+  try {
+    const { error } = await supabaseClient.auth.resetPasswordForEmail(
+      document.getElementById("recovery-email").value.trim(),
+      { redirectTo: "https://mywebsite-xi-ashy.vercel.app/reset-password.html" }
+    );
+
+    if (error) throw error;
+    recoveryStatus.textContent =
+      "If an account exists for that email, a recovery link has been sent.";
+  } catch (error) {
+    console.error("Password recovery request failed:", error);
+    recoveryStatus.textContent = "Could not send the recovery link. Please try again.";
+  } finally {
+    recoveryButton.disabled = false;
+  }
+});
 
 loginForm.addEventListener("submit", async function (event) {
   event.preventDefault();
