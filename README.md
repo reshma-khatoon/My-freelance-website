@@ -30,6 +30,9 @@ to the admin. Until this migration is applied, the dashboard reports the
 missing phone column and displays existing inquiries without phone numbers.
 Inquiries submitted without a phone can still be saved; inquiries with a phone
 cannot be saved to the database until the migration is applied.
+To add only the phone column, run
+[`supabase/add-inquiry-phone.sql`](supabase/add-inquiry-phone.sql); the full
+contact-history migration above is still needed for contact history.
 
 The form accepts Indian mobile numbers with or without the +91 prefix. Call,
 WhatsApp, and email links open the relevant app for review; they do not make a

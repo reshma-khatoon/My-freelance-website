@@ -108,7 +108,7 @@ if (message.length < 10 || message.length > 3000) {
           {
             from_name: name,
             from_email: email,
-            message: message
+            message: phone ? message + "\n\nPhone: " + phone : message
           },
           {
             publicKey: "VI3oZ8d8572fidLrN"
@@ -132,11 +132,11 @@ if (message.length < 10 || message.length > 3000) {
       } else if (!databaseSaved && emailSent) {
         formStatus.textContent =
           phone
-            ? "Your message was emailed, but database saving failed and your phone number was not included. Please do not submit again; contact the website owner."
+            ? "Your message was emailed, but database saving failed. Please contact the website owner directly about your phone number; do not submit again."
             : "Your email was sent, but database saving failed. Please do not submit again; contact the website owner.";
       } else {
         formStatus.textContent =
-          "Sorry, your message could not be processed. Please try again later.";
+          "Your message could not be saved or emailed. Please contact the website owner directly; do not submit again.";
       }
     } finally {
       submitButton.disabled = false;

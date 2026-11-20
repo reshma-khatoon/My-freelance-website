@@ -62,7 +62,9 @@ function element() {
 test("contact form saves an optional normalized phone and rejects invalid input", async () => {
   const elements = {};
   const records = [];
+  const emails = [];
   let insertError = null;
+  let emailError = null;
   const contactForm = element();
   contactForm.reset = function () {};
   elements["contact-form"] = contactForm;
@@ -87,7 +89,10 @@ test("contact form saves an optional normalized phone and rejects invalid input"
       }
     },
     document: { getElementById(id) { return elements[id]; } },
-    emailjs: { async send() {} },
+    emailjs: { async send(service, template, params) {
+      emails.push(params);
+      if (emailError) throw emailError;
+    } },
     console: { log() {}, error() {} }, Date
   });
   run("script.js", context);
@@ -99,13 +104,21 @@ test("contact form saves an optional normalized phone and rejects invalid input"
   elements.phone.value = "+91 98765 43210";
   await contactForm.listeners.submit(submit);
   assert.equal(records[0].phone, "+919876543210");
+  assert.equal(records[0].message, "A website for my shop");
+  assert.equal(emails[0].message, "A website for my shop\n\nPhone: +919876543210");
+  assert.match(elements["form-status"].textContent, /sent successfully/);
   elements.phone.value = "";
   await contactForm.listeners.submit(submit);
   assert.equal(Object.hasOwn(records[1], "phone"), false);
   insertError = { code: "PGRST204", message: "Missing phone column" };
   elements.phone.value = "9876543210";
   await contactForm.listeners.submit(submit);
-  assert.match(elements["form-status"].textContent, /phone number was not included/);
+  assert.match(elements["form-status"].textContent, /database saving failed/);
+  assert.doesNotMatch(elements["form-status"].textContent, /sent successfully/);
+  emailError = new Error("Email failed");
+  await contactForm.listeners.submit(submit);
+  assert.match(elements["form-status"].textContent, /could not be saved or emailed/);
+  assert.match(elements["form-status"].textContent, /do not submit again/);
 });
 
 test("dashboard retries only a missing phone column and displays existing inquiries", async () => {
