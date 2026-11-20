@@ -304,6 +304,16 @@
   required
 >
 
+        <label for="phone">Phone for a call or WhatsApp (optional)</label>
+        <input
+  type="tel"
+  id="phone"
+  name="phone"
+  placeholder="Indian mobile number, e.g. +91 9876543210"
+  autocomplete="tel"
+  maxlength="25"
+>
+
         <label for="message">Tell me your little idea ✨</label>
         <textarea
   id="message"
@@ -357,6 +367,7 @@
   <!-- EMAILJS AND SUPABASE LIBRARIES -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./contact-utils.js"></script>
   <script src="./script.js"></script>
 
 </body>

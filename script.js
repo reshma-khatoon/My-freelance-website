@@ -36,6 +36,8 @@ if (contactForm) {
 
     const name = document.getElementById("from_name").value.trim();
     const email = document.getElementById("from_email").value.trim();
+    const phoneInput = document.getElementById("phone").value.trim();
+    const phone = phoneInput ? window.RDContact.normalizeIndianPhone(phoneInput) : null;
     const message = document.getElementById("message").value.trim();
 
     if (name.length < 2 || name.length > 80) {
@@ -46,6 +48,11 @@ if (contactForm) {
 
 if (email.length > 254) {
   formStatus.textContent = "Please enter a shorter email address.";
+  return;
+}
+
+if (phoneInput && !phone) {
+  formStatus.textContent = "Please enter a valid Indian mobile number, or leave the phone field blank.";
   return;
 }
 
@@ -82,6 +89,7 @@ if (message.length < 10 || message.length > 3000) {
             {
               name: name,
               email: email,
+              phone: phone,
               message: message
             }
           ]);

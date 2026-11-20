@@ -22,6 +22,8 @@ const statusFilter = document.getElementById("filter-status");
 const filterCount = document.getElementById("filter-count");
 
 let allInquiries = [];
+let allContactHistory = [];
+let contactHistoryAvailable = false;
 
 document.getElementById("year").textContent = new Date().getFullYear();
 
@@ -104,6 +106,107 @@ function createMessageCard(inquiry) {
   const date = document.createElement("p");
   date.className = "message-date";
   date.textContent = "Received: " + formatDate(inquiry.created_at);
+
+  const phone = document.createElement("p");
+  phone.className = "message-email";
+  phone.textContent = inquiry.phone || "No phone number provided";
+
+  const actions = document.createElement("div");
+  actions.className = "contact-actions";
+  const links = window.RDContact.contactLinks(inquiry);
+  [
+    ["Call", links.call],
+    ["WhatsApp", links.whatsapp],
+    ["Email", links.email]
+  ].forEach(function (item) {
+    if (!item[1]) {
+      const unavailable = document.createElement("span");
+      unavailable.textContent = item[0] + " unavailable";
+      actions.appendChild(unavailable);
+      return;
+    }
+
+    const link = document.createElement("a");
+    link.textContent = item[0];
+    link.href = item[1];
+    if (item[0] === "WhatsApp") {
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+    }
+    actions.appendChild(link);
+  });
+
+  const history = document.createElement("div");
+  history.className = "contact-history";
+  const historyTitle = document.createElement("strong");
+  historyTitle.textContent = "Completed contact history";
+  const historyList = document.createElement("ul");
+  const historyStatus = document.createElement("p");
+  historyStatus.setAttribute("role", "status");
+  historyStatus.setAttribute("aria-live", "polite");
+
+  function renderHistory() {
+    historyList.replaceChildren();
+    const entries = allContactHistory.filter(function (entry) {
+      return String(entry.inquiry_id) === String(inquiry.id);
+    });
+    if (!entries.length) {
+      const empty = document.createElement("li");
+      empty.textContent = "No completed contact recorded.";
+      historyList.appendChild(empty);
+      return;
+    }
+    entries.forEach(function (entry) {
+      const line = document.createElement("li");
+      line.textContent = entry.channel + " — " + formatDate(entry.created_at);
+      historyList.appendChild(line);
+    });
+  }
+
+  history.append(historyTitle, historyList);
+  if (contactHistoryAvailable) {
+    renderHistory();
+    const controls = document.createElement("div");
+    controls.className = "contact-history-controls";
+    const channel = document.createElement("select");
+    channel.setAttribute("aria-label", "Completed contact method");
+    ["Call", "WhatsApp", "Email"].forEach(function (method) {
+      const option = document.createElement("option");
+      option.value = method;
+      option.textContent = method;
+      channel.appendChild(option);
+    });
+    const record = document.createElement("button");
+    record.type = "button";
+    record.textContent = "Record completed contact";
+    record.addEventListener("click", async function () {
+      if (!confirm("Record this " + channel.value + " as completed?")) return;
+      record.disabled = true;
+      historyStatus.textContent = "Saving contact history...";
+      try {
+        const { data, error } = await supabaseClient
+          .from("inquiry_contact_history")
+          .insert({ inquiry_id: inquiry.id, channel: channel.value })
+          .select("id, inquiry_id, channel, created_at")
+          .single();
+        if (error) throw error;
+        if (!data) throw new Error("Contact history was not returned.");
+        allContactHistory.unshift(data);
+        renderHistory();
+        historyStatus.textContent = "Completed contact recorded.";
+      } catch (error) {
+        console.error("Could not save contact history:", error);
+        historyStatus.textContent = "Could not save contact history. Please try again.";
+      } finally {
+        record.disabled = false;
+      }
+    });
+    controls.append(channel, record);
+    history.appendChild(controls);
+  } else {
+    historyStatus.textContent = "Contact history is unavailable. Refresh to try again.";
+  }
+  history.appendChild(historyStatus);
 
   // Status controls
   const statusLabel = document.createElement("label");
@@ -214,8 +317,11 @@ function createMessageCard(inquiry) {
   card.append(
     name,
     email,
+    phone,
     message,
     date,
+    actions,
+    history,
     statusLabel,
     saveButton,
     statusMessage,
@@ -233,7 +339,7 @@ async function loadMessages() {
   try {
     const { data, error } = await supabaseClient
       .from("inquiries")
-.select("id, name, email, message, created_at, status")   
+.select("id, name, email, phone, message, created_at, status")
    .order("created_at", { ascending: false });
 
     if (error) throw error;
@@ -242,7 +348,30 @@ async function loadMessages() {
     allInquiries = data;
     latestCount.textContent = Math.min(data.length, 5);
 
-   showStatus("Customer messages loaded successfully.");
+    allContactHistory = [];
+    contactHistoryAvailable = false;
+    try {
+      const pageSize = 500;
+      let page = 0;
+      let entries;
+      do {
+        const result = await supabaseClient
+          .from("inquiry_contact_history")
+          .select("id, inquiry_id, channel, created_at")
+          .order("created_at", { ascending: false })
+          .order("id", { ascending: false })
+          .range(page * pageSize, (page + 1) * pageSize - 1);
+        if (result.error) throw result.error;
+        entries = result.data;
+        allContactHistory.push(...entries);
+        page++;
+      } while (entries.length === pageSize);
+      contactHistoryAvailable = true;
+      showStatus("Customer messages loaded successfully.");
+    } catch (historyError) {
+      console.error("Could not load contact history:", historyError);
+      showStatus("Messages loaded, but contact history could not be loaded. Refresh to try again.");
+    }
 filterMessages();}
     catch (error) {
     console.error("Could not load inquiries:", error);

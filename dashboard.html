@@ -233,6 +233,30 @@
   margin-bottom: 12px;
 }
 
+.contact-actions, .contact-history-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.contact-actions a {
+  display: inline-block;
+  padding: 11px 16px;
+  border-radius: 9px;
+  background: var(--deep-sage);
+  color: white;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.contact-actions a:hover { background: var(--coffee); }
+.contact-actions span, .contact-history { font-size: 13px; color: var(--muted); }
+.contact-history { margin-top: 14px; line-height: 1.6; }
+.contact-history ul { margin: 6px 0 0 20px; }
+.contact-history-controls select { padding: 9px; }
+
 .message-filters input,
 .message-filters select {
   width: 100%;
@@ -330,6 +354,7 @@ placeholder="Search by name, email or message..."
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./contact-utils.js"></script>
   <script src="./dashboard.js"></script>
 </body>
 </html>
