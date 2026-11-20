@@ -92,13 +92,9 @@ test("recovery validates passwords, updates them, and returns to login", async (
   assert.equal(location.href, "admin.html");
 });
 
-test("login recovery requests the production reset URL and login remains unchanged", async () => {
+test("admin login works without recovery controls", async () => {
   const calls = [];
   const auth = {
-    async resetPasswordForEmail(email, options) {
-      calls.push({ email, redirectTo: options.redirectTo });
-      return { error: null };
-    },
     async signInWithPassword(credentials) {
       calls.push(credentials);
       return { data: { user: { id: adminId } }, error: null };
@@ -106,19 +102,12 @@ test("login recovery requests the production reset URL and login remains unchang
   };
   const ids = [
     "admin-login-form", "login-btn", "login-status", "admin-email",
-    "admin-password", "forgot-password-link", "recovery-form",
-    "recovery-btn", "recovery-status", "recovery-email"
+    "admin-password"
   ];
   const { elements, location } = loadScript("admin.js", ids, auth);
   elements["admin-email"].value = "admin@example.test";
-  elements["forgot-password-link"].listeners.click(submit);
-  await elements["recovery-form"].listeners.submit(submit);
-  assert.deepEqual(calls[0], {
-    email: "admin@example.test",
-    redirectTo: "https://mywebsite-xi-ashy.vercel.app/reset-password.html"
-  });
   elements["admin-password"].value = "new-password";
   await elements["admin-login-form"].listeners.submit(submit);
-  assert.equal(calls[1].password, "new-password");
+  assert.equal(calls[0].password, "new-password");
   assert.equal(location.href, "dashboard.html");
 });
