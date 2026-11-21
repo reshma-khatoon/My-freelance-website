@@ -25,6 +25,27 @@ if (yearElement) {
   yearElement.textContent = new Date().getFullYear();
 }
 
+// Pricing buttons: scroll to contact and prefill the message
+(document.querySelectorAll ? document.querySelectorAll(".pricing-btn") : []).forEach(function (btn) {
+  btn.addEventListener("click", function (event) {
+    event.preventDefault();
+    const contact = document.getElementById("contact");
+    const box = document.getElementById("message");
+    const pkg = btn.dataset.package;
+
+    if (box && pkg) {
+      const text = pkg === "Custom"
+        ? "Hi! I'd like to discuss a custom package. "
+        : "Hi! I'm interested in the " + pkg + " package. ";
+      const existing = box.value.replace(/^Hi! I'(m interested in the \w+ package|d like to discuss a custom package)\. ?/, "");
+      box.value = text + existing;
+    }
+
+    if (contact) contact.scrollIntoView({ behavior: "smooth" });
+    if (box) setTimeout(function () { box.focus({ preventScroll: true }); }, 600);
+  });
+});
+
 // RD Studio Contact Form
 const contactForm = document.getElementById("contact-form");
 const submitButton = document.getElementById("submit-btn");
